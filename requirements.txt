@@ -1,0 +1,3 @@
+pycbc
+lalsuite
+ligo-common
