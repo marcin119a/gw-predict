@@ -1,3 +1,6 @@
+from pycbc.waveform import get_td_waveform
+
+
 def generate_wave(params):
 
 
