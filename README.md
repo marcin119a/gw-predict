@@ -16,7 +16,11 @@ pip install -r requirements.txt
 
 Parameters for generating one waveform in multiple detectors
 ```python
-from 
+from generator_waveform import generate_wave
+
+apx = 'SEOBNRv4'
+
+
 params = {
     'approximant':apx,
     'mass1':100,
@@ -31,3 +35,4 @@ params = {
 
 signal_h1, signal_l1, signal_v1 = generate_wave(params)
 ```
+![alt text]( wave.png  "genrating one wave")
