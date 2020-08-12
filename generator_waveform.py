@@ -1,4 +1,5 @@
 from pycbc.waveform import get_td_waveform
+from pycbc.detector import Detector
 
 
 def generate_wave(params):
