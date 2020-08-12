@@ -9,6 +9,11 @@ Utilities for lstm model using gravitaion waves
 pip install -r requirements.txt
 ```
 
+```bash
+# We'll first download some data for this demonstration
+!curl -O -J -L https://losc.ligo.org/s/events/LVT151012/H-H1_LOSC_4_V2-1128678884-32.gwf
+```
+
 Parameters for generating one waveform in multiple detectors
 ```python
 from 
