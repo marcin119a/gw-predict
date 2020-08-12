@@ -20,3 +20,5 @@ def split_dataset(dataset):
 def preprocessing(dataset):
   dataset = np.array([i for i in dataset])
   dataset = scaler(dataset)
+  
+  return dataset
