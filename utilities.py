@@ -1,14 +1,4 @@
-from sklearn.preprocessing import MinMaxScaler
 import numpy as np
-
-def scaler(start,end):
-   scaler = MinMaxScaler(feature_range=(start, end))
-   return scaler
-
-def scale(dataset):
-  dataset = scaler(0,1)
-  
-  return dataset
 
 
 def split_dataset(dataset):
