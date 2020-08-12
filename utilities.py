@@ -1,10 +1,12 @@
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 
+def scaler(start,end):
+   scaler = MinMaxScaler(feature_range=(start, end))
+   return scaler
 
-def scaler(dataset):
-  scaler = MinMaxScaler(feature_range=(0, 1))
-  dataset = scaler.fit_transform(dataset.reshape(-1,1))
+def scale(dataset):
+  dataset = scaler(0,1)
   
   return dataset
 
