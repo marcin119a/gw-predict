@@ -2,7 +2,16 @@ Utilities for lstm model using gravitaion waves
 
 ### Instalation: 
 
+### venv activation:
+```bash
+python3 -m venv env
+```
+Activation:
+```bash
+. env/bin/activate
+```
 
+### Instalation requirements: 
 
 
 ```bash
