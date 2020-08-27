@@ -10,6 +10,8 @@ in_seq2 = array([15, 25, 35, 45, 55, 65, 75, 85, 95])
 params1 = [3,3]
 params2 = [4,1]
 
+X = np.array([x1,x2])
+
 x1 = [np.array(x) for x in in_seq1 ]
 x2 = [np.array(x) for x in in_seq2 ]
 
