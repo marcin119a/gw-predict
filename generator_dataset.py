@@ -4,11 +4,11 @@ import numpy as np
 
 def random_dataset(m1, m2):
   apx = 'SEOBNRv4'
-
+  
 
   X = []
   y = []
-  for _ in range(2):
+  for _ in range(100):
       mass1 = np.random.uniform(m1,m2)
       mass2 = np.random.uniform(m1,m2)
 
@@ -25,7 +25,9 @@ def random_dataset(m1, m2):
       }
 
       signal_h1, signal_l1, signal_v1 = generate_wave(params)
+      signal_h1.resize(1400)
       x1 = np.array([step for step in signal_h1])
+
       X.append(x1)
       y.append(np.array([mass1, mass2]))
 
