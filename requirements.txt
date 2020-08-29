@@ -1,3 +1,4 @@
 pycbc
 lalsuite
 ligo-common
+hickle
