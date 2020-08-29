@@ -45,3 +45,12 @@ params = {
 signal_h1, signal_l1, signal_v1 = generate_wave(params)
 ```
 ![alt text]( wave.png  "genrating one wave")
+
+# Gradient Clipping 
+```python
+import keras.optimizers as optim
+
+opt = optim.Adam(clipvalue=1,lr = 0.001)
+model.compile(optimizer=opt, loss='mse')
+```
+
