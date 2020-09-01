@@ -1,4 +1,3 @@
-from generator_waveform import generate_wave
 from generator_dataset import random_dataset
 import tensorflow as tf
 from generator_waveform import generate_wave
