@@ -20,8 +20,8 @@ def main():
     m1 = args["mass1"]
     m2 = args["mass2"]
     time_steps = args["ts"]
-    
-    X, y = random_dataset(m1=m1, m2=m2, n_steps=n, iteraction=time_steps)
+
+    X, y = random_dataset(m1=m1, m2=m2, n_steps=time_steps, iteraction=n)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
     X = X.reshape(X.shape[0], X.shape[2], 1)
