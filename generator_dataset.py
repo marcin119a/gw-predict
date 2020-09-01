@@ -1,7 +1,6 @@
 import tensorflow as tf
 import numpy as np
 from generator_waveform import generate_wave
-from hyperopt import hp
 
 def random_dataset(m1, m2, n_steps, iteraction):
   apx = 'SEOBNRv4'
