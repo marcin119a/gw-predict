@@ -54,3 +54,5 @@ opt = optim.Adam(clipvalue=1,lr = 0.001)
 model.compile(optimizer=opt, loss='mse')
 ```
 
+References:
+* https://dcc.ligo.org/LIGO-P1800129/public
