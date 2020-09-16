@@ -24,7 +24,6 @@ def main():
     X, y = random_dataset(m1=m1, m2=m2, n_steps=time_steps, iteraction=n)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
-    X = X.reshape(X.shape[0], X.shape[2], 1)
 
     data = {'xtrain': X_train, 'xtest' : X_test, 'ytrain': y_train, 'ytest': y_test}
     hkl.dump(data, 'D-SET({0},{1}).hkl'.format(n,time_steps))
