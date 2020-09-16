@@ -1,3 +1,5 @@
+from keras.initializers import glorot_normal
+from keras.regularizers import l1,l2
 from keras.models import Sequential
 from keras.layers import (
     Dense, LSTM, RepeatVector, TimeDistributed
@@ -32,8 +34,30 @@ testX, testY = create_dataset(test, look_back)
 trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
 testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
 
-model = Sequential()
-model.add(LSTM(4, input_shape=(1, look_back)))
-model.add(Dense(1))
-model.compile(loss='mean_squared_error', optimizer='adam')
-model.fit(trainX, trainY, epochs=3, batch_size=1, verbose=2)
+
+def create_model(in_n, activation='tanh', lr=1e-3, reg=0.0, dropout=0.0):
+    """
+    Return a neural network model given the hyperparameters and input shape.
+    """
+    n_steps_in, n_steps_out = in_n, 2
+    n_features = 1
+
+    model = Sequential()
+    model.add(LSTM(32,
+                   input_shape          = (n_steps_in, n_features),
+                   activation           = activation,
+                   kernel_regularizer   = l2(reg),
+                   kernel_initializer   = glorot_normal(),
+                   bias_initializer     = 'ones',
+                   dropout              = dropout,
+                   name                 = 'ONE'))
+    model.add(LSTM(32, 
+                   activation           = activation))
+    model.add(Dense(n_steps_out,
+                    activation          = activation,
+                    kernel_regularizer  = l2(reg),
+                    kernel_initializer  = glorot_normal(),
+                    name                = 'TWO'))
+    model.compile(optimizer=Adam(lr=lr), loss='mse')
+
+    return model
