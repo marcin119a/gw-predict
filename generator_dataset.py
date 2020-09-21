@@ -27,9 +27,12 @@ def random_dataset(m1, m2, n_steps, iteraction):
       signal_h1.resize(n_steps)
       x1 = np.array([step for step in signal_h1])      
       y1 = np.array([mass1, mass2])
+      y1 = tf.keras.utils.normalize(y1, axis = -1)
+
       
       X.append(x1)
       y.append(y1)
+
 
 
   return np.array(X), np.array(y)
