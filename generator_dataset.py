@@ -7,8 +7,11 @@ def random_dataset(m1, m2, n_steps, iteraction, quark=False):
   apx = 'SEOBNRv4'
   
 
-  X = []
-  y = []
+  X 	 = []
+  X_norm = []
+  y 	 = []
+  y_norm = []
+
   for _ in range(iteraction):
       mass1 = np.random.uniform(m1, m2)
       mass2 = np.random.uniform(m1, m2)
@@ -29,18 +32,24 @@ def random_dataset(m1, m2, n_steps, iteraction, quark=False):
       signal_h1.resize(n_steps)
 
       x1 = np.array([step for step in signal_h1])    
-      x1 = tf.keras.utils.normalize(x1, axis = -1)  
+      x1_norm = tf.keras.utils.normalize(x1, axis = -1)  
       
       if quark == True:
         y1 = mass_quarter(mass1, mass2)
+        
+        y.append(y1)
       else:
         y1 = np.array([mass1, mass2])
-        y1 = tf.keras.utils.normalize(y1, axis = -1)
+        y1_norm = tf.keras.utils.normalize(y1, axis = -1)
 
-      
+        y.append(y_norm)
+
+
+      y_norm.append(y1_norm)
       X.append(x1)
-      y.append(y1)
+      X_norm.append(x1_norm)
+      
 
 
 
-  return np.array(X), np.array(y)
+  return np.array(X_norm),np.array(y_norm), np.array(X), np.array(y)

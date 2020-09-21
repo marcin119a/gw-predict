@@ -20,10 +20,11 @@ def main():
     m1 = args["mass1"]
     m2 = args["mass2"]
     time_steps = args["ts"]
+    quark = args["qr"]
 
-    X, y = random_dataset(m1=m1, m2=m2, n_steps=time_steps, iteraction=n, quark=quark)
+    X_norm, y_norm, _, _ = random_dataset(m1=m1, m2=m2, n_steps=time_steps, iteraction=n, quark=quark)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X_norm, y_norm, test_size=0.33, random_state=42)
 
     data = {'xtrain': X_train, 'xtest' : X_test, 'ytrain': y_train, 'ytest': y_test}
     hkl.dump(data, 'D-SET({0},{1}).hkl'.format(n,time_steps))
