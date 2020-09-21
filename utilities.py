@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def split_dataset(dataset):
   train_size = int(len(dataset) * 0.67)
   test_size = len(dataset) - train_size
@@ -9,11 +8,6 @@ def split_dataset(dataset):
   return train, test
 
 
-def preprocessing(dataset):
-  dataset = np.array([i for i in dataset])
-  dataset = scaler(dataset)
-  
-  return dataset
 
 def create_dataset(dataset, look_back=1):
 	dataX, dataY = [], []
@@ -22,6 +16,7 @@ def create_dataset(dataset, look_back=1):
 		dataX.append(a)
 		dataY.append(dataset[i + look_back, 0])
 	return np.array(dataX), np.array(dataY)
+
 
 def split_sequences_wave(sequences, params):
   X, y = list(), list()
@@ -32,3 +27,7 @@ def split_sequences_wave(sequences, params):
   	y.append(params)
   
   return array(X), y
+
+
+def mass_quarter(m1, m2):
+  return pow(m1*m2,3/5)/ pow(m1 + m2, 1/5)
