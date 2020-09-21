@@ -1,5 +1,6 @@
 import numpy as np
 from generator_waveform import generate_wave
+import tensorflow as tf
 
 def random_dataset(m1, m2, n_steps, iteraction):
   apx = 'SEOBNRv4'
