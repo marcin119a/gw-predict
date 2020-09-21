@@ -11,7 +11,7 @@ def main():
     ap.add_argument("-m1", "--mass1", type=int, default=10, help="First mass of black hole")
     ap.add_argument("-m2", "--mass2", type=int, default=40, help="Second mass of black hole")
     ap.add_argument("-time_steps", "--ts", type=int, default=1400, help="Time steps for single signal")
-    
+    ap.add_argument("-quark", "--qr", type=bool, default=False, help="Quark parameters")
 
     args = vars(ap.parse_args())
     n = args["n"]
@@ -21,7 +21,7 @@ def main():
     m2 = args["mass2"]
     time_steps = args["ts"]
 
-    X, y = random_dataset(m1=m1, m2=m2, n_steps=time_steps, iteraction=n)
+    X, y = random_dataset(m1=m1, m2=m2, n_steps=time_steps, iteraction=n, quark=quark)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 

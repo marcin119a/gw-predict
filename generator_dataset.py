@@ -1,8 +1,9 @@
 import numpy as np
 from generator_waveform import generate_wave
 import tensorflow as tf
+from utilities import mass_quarter
 
-def random_dataset(m1, m2, n_steps, iteraction):
+def random_dataset(m1, m2, n_steps, iteraction, quark=False):
   apx = 'SEOBNRv4'
   
 
@@ -26,9 +27,15 @@ def random_dataset(m1, m2, n_steps, iteraction):
 
       signal_h1, signal_l1, signal_v1 = generate_wave(params)
       signal_h1.resize(n_steps)
-      x1 = np.array([step for step in signal_h1])      
-      y1 = np.array([mass1, mass2])
-      y1 = tf.keras.utils.normalize(y1, axis = -1)
+
+      x1 = np.array([step for step in signal_h1])    
+      x1 = tf.keras.utils.normalize(x1, axis = -1)  
+      
+      if quark == True:
+        y1 = mass_quarter(mass1, mass2)
+      else:
+        y1 = np.array([mass1, mass2])
+        y1 = tf.keras.utils.normalize(y1, axis = -1)
 
       
       X.append(x1)
