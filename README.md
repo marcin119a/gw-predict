@@ -44,7 +44,7 @@ params = {
 
 signal_h1, signal_l1, signal_v1 = generate_wave(params)
 ```
-![alt text]( wave.png  "genrating one wave")
+![alt text]( images/wave.png  "genrating one wave")
 
 # Gradient Clipping 
 ```python
