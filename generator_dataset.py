@@ -36,16 +36,20 @@ def random_dataset(m1, m2, n_steps, iteraction, quark=False):
       
       if quark == True:
         y1 = mass_quarter(mass1, mass2)
-        
+        #without normalizaction
+        y_norm.append(y1)
         y.append(y1)
+
       else:
         y1 = np.array([mass1, mass2])
+        y.append(y1)
+
         y1_norm = tf.keras.utils.normalize(y1, axis = -1)
+        y_norm.append(y1_norm)
+        
 
-        y.append(y_norm)
 
-
-      y_norm.append(y1_norm)
+      
       X.append(x1)
       X_norm.append(x1_norm)
       
