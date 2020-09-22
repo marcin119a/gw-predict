@@ -44,7 +44,7 @@ params = {
 
 signal_h1, signal_l1, signal_v1 = generate_wave(params)
 ```
-![alt text]( images/wave.png  "genrating one wave")
+![alt text]( img/wave.png  "genrating one wave")
 
 # Gradient Clipping 
 ```python
@@ -53,6 +53,24 @@ import keras.optimizers as optim
 opt = optim.Adam(clipvalue=1,lr = 0.001)
 model.compile(optimizer=opt, loss='mse')
 ```
+
+# Generated dataset 
+
+Simple command: 
+```bash
+	python dump_dataset.py -m1=10 -m2=20 -n=100 -time_steps=300 -quark=True
+```
+
+### Generate dataset parameters
+
+* m1 -- first mass of black hole, 
+* m2 -- second mass of black hole,
+* -n  -- numbers of signals,
+* -time_steps -- lengh of signal,
+* -create one feature with quark mass using rule```Mc = (m1*m2)^(3/5)/(m1 + m2)^{1/5}```
+
+Datasets are stored into .hkl files. Example paterns of files ```D-SET-norm(100,300).hkl```
+
 
 References:
 * https://dcc.ligo.org/LIGO-P1800129/public
