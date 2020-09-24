@@ -2,6 +2,12 @@ Utilities for lstm model using gravitaion waves
 
 ### Instalation: 
 
+### conda activation:
+
+```
+conda activate base
+```
+
 ### venv activation:
 ```bash
 python3 -m venv env
