@@ -62,17 +62,18 @@ def loss(params):
     return {'loss':val_loss, 'status':STATUS_OK}
 
 
-print('Begin tuning')
-print('------------')
-trials = Trials()
-best_params = fmin(loss,
-                   space = space,
-                   algo = tpe.suggest,
-                   max_evals = 20,
-                   trials = trials)
-print('')
-print('Best parameters:')
-print('----------------')
-best_params['activation'] = ['relu', 'tanh'][best_params['activation']]
-for k, v in best_params.items():
-    print('{} = {}'.format(k, v))
+if __name__ == "__main__":  
+    print('Begin tuning')
+    print('------------')
+    trials = Trials()
+    best_params = fmin(loss,
+                    space = space,
+                    algo = tpe.suggest,
+                    max_evals = 20,
+                    trials = trials)
+    print('')
+    print('Best parameters:')
+    print('----------------')
+    best_params['activation'] = ['relu', 'tanh'][best_params['activation']]
+    for k, v in best_params.items():
+        print('{} = {}'.format(k, v))
