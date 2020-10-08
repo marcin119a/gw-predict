@@ -27,7 +27,9 @@ def main():
     X_train, X_test, y_train, y_test = train_test_split(X_norm, y_norm, test_size=0.33, random_state=42)
 
     data = {'xtrain': X_train, 'xtest' : X_test, 'ytrain': y_train, 'ytest': y_test}
-    hkl.dump(data, 'D-SET({0},{1}).hkl'.format(n,time_steps))
+    status = 'quark' if quark == True else ''
+
+    hkl.dump(data, 'D-SET({0},{1}){2}.hkl'.format(n,time_steps, status))
 
 
 if __name__ == '__main__':

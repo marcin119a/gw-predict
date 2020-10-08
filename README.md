@@ -5,6 +5,7 @@ Utilities for lstm model using gravitaion waves
 ### conda activation:
 
 ```
+source <path>/anaconda3/bin/activate
 conda activate base
 ```
 
