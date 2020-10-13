@@ -26,12 +26,12 @@ y_train = np.squeeze(y_train)
 
 
 
-def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0):
+def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_layers=200):
   n_steps_in, n_steps_out = X_train.shape[1], 1
   model = Sequential()
   model.add(
       LSTM(
-          200, 
+          num_layers, 
           activation=activation, 
           dropout = dropout, 
           kernel_regularizer = l2(reg), 
@@ -39,7 +39,8 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0):
           input_shape=(n_steps_in, 1))
       )
   model.add(
-      LSTM(200, 
+      LSTM(
+          num_layers, 
           activation=activation, 
           dropout = dropout, 
           kernel_regularizer = l2(reg))
@@ -57,7 +58,8 @@ space = {
     'activation':hp.choice('activation', ('relu', 'tanh')),
     'lr':hp.loguniform('lr', np.log(1e-6), np.log(1e-2)), 
     'dropout':hp.uniform('dropout', 0.0, 1.0), 
-    'reg':hp.uniform('reg', 1e-6, 1e-3)
+    'reg':hp.uniform('reg', 1e-6, 1e-3), 
+    'num_layers': hp.uniformint('num_layers', 64,1024)
 }
 
 # define loss function
