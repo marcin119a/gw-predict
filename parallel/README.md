@@ -27,3 +27,10 @@
     pymongo
     hyperopt
 ```
+
+### Run:
+```
+    setpid ./mongo.sh
+    setpid ./worker.sh
+    
+```
