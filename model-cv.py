@@ -1,20 +1,14 @@
 
-from sklearn.model_selection import KFold, cross_val_score
 import numpy as np
+import hickle as hkl
+import keras.optimizers as optim
 
-random_state=42
-num_folds=2
-
-kf = KFold(n_splits=num_folds, random_state=random_state)
-rstate= np.random.RandomState(random_state)
-
-
+from sklearn.model_selection import KFold, cross_val_score
 from keras.models import Sequential
 from keras.layers import LSTM
 from keras.layers import Dense
-import keras.optimizers as optim
 from keras.regularizers import l1,l2
-import hickle as hkl
+from matplotlib import pyplot
 
 
 array_hkl = hkl.load('data/D-SET(100,1200).hkl')
@@ -50,14 +44,36 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, number_layers
   
   return model
 
+# remove one dimension
 y_test = np.squeeze(y_test)
 y_train = np.squeeze(y_train)
 
    
 from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.model_selection import RepeatedKFold
+from numpy import mean
+from numpy import std
+from scipy.stats import sem
 
-classifier = KerasClassifier(build_fn = create_model, batch_size = 10, epochs = 20)
-accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10)
-mean = accuracies.mean()
-std = accuracies.std()
-print(accuracies)
+def evaluate_model(X,y, repeats):
+    # prepare the cross-validation procedure
+    classifier = KerasClassifier(build_fn = create_model, batch_size = 10, epochs = 20)
+
+    accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10)
+
+    return accuracies
+
+# configurations for test
+repeats = range(1,2)
+results = list()
+for r in repeats:
+	# evaluate using a given number of repeats
+	scores = evaluate_model(X_test, y_test, r)
+	# summarize
+	print('>%d mean=%.4f se=%.3f' % (r, mean(scores), sem(scores)))
+	# store
+	results.append(scores)
+# plot the results
+pyplot.boxplot(results, labels=[str(r) for r in repeats], showmeans=True)
+pyplot.show()
+pyplot.savefig('boxplot.png')

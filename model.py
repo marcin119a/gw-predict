@@ -6,7 +6,7 @@ from keras.regularizers import l1,l2
 import hickle as hkl
 import numpy as np
 from lstm import create_model, X_train, X_test, y_test, y_train
-
+from datetime import datetime
 
 model = create_model(activation = 'tanh', dropout = 0.03798050443750123, lr = 4.217325916228721 * (10** -6), reg = 0.00022299214636513958)
 
@@ -15,7 +15,9 @@ stats = model.fit(X_train, y_train, validation_data=(X_test, y_test),
                   
 y_pred = model.predict(X_test)
 
-model.save('model/model2020-10-29.h5', save_format='h5')
+date = datetime.today().strftime("%Y-%m-%d")
+filename = f'model/model{date}-mass.h5'
+model.save(filename, save_format='h5')
 
 import matplotlib.pyplot as plt
 
