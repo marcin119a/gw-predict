@@ -28,9 +28,33 @@
     hyperopt
 ```
 
-### Run:
+### Run tmux session:
+```bash
+    tmux new-session
+    sh mongo.db
+```
+#### Detach from session:
+```
+ctrl + b d
+```
+
+```bash
+    tmux new-session
+    sh worker.sh
+```
+
+#### Show all sessions:
+```
+Ctrl + b s
+```
+
+
 ```
     setpid ./mongo.sh
     setpid ./worker.sh
     
 ```
+
+Resources:
+* https://github.com/hyperopt/hyperopt/wiki/Parallelizing-Evaluations-During-Search-via-MongoDB
+* https://tmuxcheatsheet.com/
