@@ -2,12 +2,20 @@ from keras.models import Sequential
 from keras.layers import LSTM
 from keras.layers import Dense
 from keras.regularizers import l1,l2
+from keras.layers.normalization import BatchNormalization
 
 import keras.optimizers as optim
 import tensorflow as tf
 import hickle as hkl
 import numpy as np
 
+import argparse
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-parallel", "--pr", type=bool, default=False, help="Parallel computation")
+ap.add_argument("-batch_norm", "--bn", type=bool, default=False, help="Batch normalizaction")
+
+args = vars(ap.parse_args())
 
 array_hkl = hkl.load('data/D-SET(100,1200)quark.hkl')
 X_train = array_hkl.get('xtrain')
@@ -38,6 +46,10 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_layers=20
           return_sequences=True, 
           input_shape=(n_steps_in, 1))
       )
+
+  if args["bn"]:
+    model.add(BatchNormalization())
+
   model.add(
       LSTM(
           num_layers, 
@@ -45,6 +57,9 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_layers=20
           dropout = dropout, 
           kernel_regularizer = l2(reg))
       )
+
+  if args["bn"]:
+    model.add(BatchNormalization())
   model.add(Dense(n_steps_out, kernel_regularizer = l2(reg)))
   model.compile(optimizer='adam', loss='mse')
   
@@ -76,7 +91,12 @@ def loss(params):
 if __name__ == "__main__":
     print('Begin tuning')
     print('------------')
-    trials = Trials()
+
+    if args["pr"]:
+        trials = MongoTrials('mongo://localhost:1234/optim/jobs', exp_key='exp1')
+    else:
+        trials = Trials()
+
     best_params = fmin(loss,
                     space = space,
                     algo = tpe.suggest,
