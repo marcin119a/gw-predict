@@ -1,9 +1,9 @@
 import numpy as np
 from generator_waveform import generate_wave
 import tensorflow as tf
-from utilities import mass_quarter
+from utilities import mass_quarter, max_ts
 
-def random_dataset(m1, m2, n_steps, iteraction, quark=False):
+def random_dataset(m1, m2, n_steps, iteraction, quark=False, max_model=False):
   apx = 'SEOBNRv4'
   
 
@@ -41,19 +41,22 @@ def random_dataset(m1, m2, n_steps, iteraction, quark=False):
         y.append(y1)
 
       else:
-        y1 = np.array([mass1, mass2])
-        y.append(y1)
+        if max_model== True:
+          y1 = max(x1_norm) 
+          y_norm.append(y1)
+          y.append(y1)
+          
+        else:
+          y1 = np.array([mass1, mass2])
+          y.append(y1)
 
-        y1_norm = tf.keras.utils.normalize(y1, axis = -1)
-        y_norm.append(y1_norm)
-        
+          y1_norm = tf.keras.utils.normalize(y1, axis = -1)
+          y_norm.append(y1_norm)
 
-
-      
       X.append(x1)
       X_norm.append(x1_norm)
       
 
 
 
-  return np.array(X_norm),np.array(y_norm), np.array(X), np.array(y)
+  return np.array(X_norm), np.array(y_norm), np.array(X), np.array(y)
