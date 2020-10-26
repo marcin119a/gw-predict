@@ -3,6 +3,7 @@ from keras.layers import LSTM
 from keras.layers import Dense
 from keras.regularizers import l1,l2
 from keras.layers.normalization import BatchNormalization
+from hyperopt.mongoexp import MongoTrials
 
 import keras.optimizers as optim
 import tensorflow as tf

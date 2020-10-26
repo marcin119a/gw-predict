@@ -8,10 +8,10 @@ import numpy as np
 from lstm import create_model, X_train, X_test, y_test, y_train
 from datetime import datetime
 
-model = create_model(activation = 'tanh', dropout = 0.03798050443750123, lr = 4.217325916228721 * (10** -6), reg = 0.00022299214636513958)
+model = create_model(activation = 'tanh', lr = 4.641443345317367 * (10** -5), reg = 3.564391979952528 * (10**-5), dropout=0, num_layers=425)
 
 stats = model.fit(X_train, y_train, validation_data=(X_test, y_test),
-                  epochs=20, batch_size=32)
+                  epochs=100, batch_size=32)
                   
 y_pred = model.predict(X_test)
 
@@ -27,11 +27,11 @@ fig, ax = plt.subplots()
 
 ax.plot(stats.history['loss'], label='train')
 ax.plot(stats.history['val_loss'], label='test')
-ax.set(xlabel='Epochs', ylabel='MSE Loss', xticks=np.arange(0, 21, 5))
+ax.set(xlabel='Epochs', ylabel='MSE Loss', xticks=np.arange(0, 100, 5))
 ax.legend()
 fig.tight_layout()
 
-fig.savefig('loss_vs_val_standrad.png')
+fig.savefig('loss_vs_val_standard.png')
 
 y_test = np.squeeze(y_test)
 y_pred = np.squeeze(y_pred)
