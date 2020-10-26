@@ -31,3 +31,14 @@ def split_sequences_wave(sequences, params):
 
 def mass_quarter(m1, m2):
   return pow(m1*m2,3/5)/ pow(m1 + m2, 1/5)
+
+
+def max_ts(timeseries):
+    max_ = 0
+    i = 0
+    poz = 0
+    for i in range(len(timeseries)):
+        if max_ < timeseries[i]:
+            max_ = timeseries[i]
+            poz = i
+    return poz, max_ 
