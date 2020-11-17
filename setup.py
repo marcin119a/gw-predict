@@ -16,6 +16,7 @@ setup(
         'ligo-common',
         'hickle',
         'keras==2.4.3',
-        'tensorflow==2.3.0'
+        'tensorflow==2.3.0',
+        'mlflow'
     ],
 )
