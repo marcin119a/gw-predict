@@ -4,18 +4,35 @@ from keras.layers import Dense
 import keras.optimizers as optim
 from keras.regularizers import l1,l2
 import numpy as np
-from lstm_chirp import create_model, X_train, X_test, y_test, y_train
+from lstm_chirp import create_model
 from datetime import datetime
 import argparse
+import tensorflow as tf
+import hickle as hkl
 
 
-
-def model_run(X_train, y_test, activation='tanh', lr=9.345405211822168 * (10**-5), 
-              reg=3.564391979952528 * (10** -5), dropout= 0.369863105580737, 
-              num_layers=546, epoach=2, batch_size=2):
+def model_run(file_name, activation='tanh', lr=9.345405211822168 * (10**-5),
+             reg=3.564391979952528 * (10** -5), dropout=0, num_layers=500,
+             epochs=10, batch_size=2):
     
     model = create_model(activation=activation, lr=lr, reg=reg, dropout=dropout, num_layers=num_layers)
-    stats = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=epoach, batch_size=batch_size)
+
+    array_hkl = hkl.load(file_name)
+    X_train = array_hkl.get('xtrain')
+    X_test = array_hkl.get('xtest')
+    y_train = array_hkl.get('ytrain')
+    y_test = array_hkl.get('ytest')
+
+    X_train = X_train.reshape(X_train.shape[0], X_train.shape[2], 1)
+    X_test =  X_test.reshape(X_test.shape[0], X_test.shape[2], 1)
+
+    y_train = tf.keras.utils.normalize(y_train)  
+    y_test = tf.keras.utils.normalize(y_test)  
+
+    y_test = np.squeeze(y_test)
+    y_train = np.squeeze(y_train)
+
+    stats = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=epochs, batch_size=batch_size)
 
 
     y_pred = model.predict(X_test)
@@ -43,29 +60,26 @@ def model_run(X_train, y_test, activation='tanh', lr=9.345405211822168 * (10**-5
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("-activation", "--activation", type=str, default=False, help="Activation")
-    ap.add_argument("-lr", "--lr", type=bool, default=False, help="Learning Rate")
-    ap.add_argument("-reg", "--reg", type=bool, default=False, help="Regularizaction")
-    ap.add_argument("-dropout", "--dropout", type=bool, default=False, help="Dropout")
-    ap.add_argument("-num_layers", "--num_layers", type=bool, default=False, help="Num of layers")
-    ap.add_argument("-epochs", "--num_epoch", type=bool, default=False, help="Epochs")
-    ap.add_argument("-bs", "--batch_size", type=bool, default=False, help="Batch size")
+    ap.add_argument("-f", "--file", type=str, default='data/D-SET(100,1200)-chirp.hkl', help="File")
+    ap.add_argument("-act", "--activation", type=str, default='tanh', help="Activation")
+    ap.add_argument("-lr", "--lr", type=bool, default=0, help="Learning Rate")
+    ap.add_argument("-reg", "--reg", type=bool, default=0, help="Regularizaction")
+    ap.add_argument("-dropout", "--dropout", type=bool, default=0.37, help="Dropout")
+    ap.add_argument("-nn", "--num_layers", type=bool, default=546, help="Num of neurons")
+    ap.add_argument("-epochs", "--num_epoch", type=bool, default=100, help="Epochs")
+    ap.add_argument("-bs", "--batch_size", type=bool, default=100, help="Batch size")
     
     args = vars(ap.parse_args())
-    activation = args['activation']
-    lr = args['lr']
-    reg = args['reg']
-    dropout = args['dropout']
-    num_layers = args['num_layers']
 
     params = {
-        'X_train': X_train,
-        'y_test': y_test,
-        'activation': activation,
-        'lr' : lr, 
-        'reg' : reg, 
-        'dropout' : dropout, 
-        'num_layers' : num_layers
+        'file_name': args['file'],
+        'activation': args['activation'],
+        'lr' : args['lr'], 
+        'reg' : args['reg'], 
+        'dropout' : args['dropout'], 
+        'num_layers' :  args['num_layers'],
+        'epochs': args['num_epoch'],
+        'batch_size':  args['batch_size']
     }
     
     model_run(**params)

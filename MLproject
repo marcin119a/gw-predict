@@ -1,0 +1,17 @@
+name: tutorial 
+
+entry_points:
+    main:
+        parameters:
+            file: {type: str, default: }
+            act: {type: str, default: 'tanh'}
+            lr: {type: integer, default: 546}
+            reg: {type: float, defalut: 0}
+            dropout: {type: float, defalut: 0}
+            num_layers: {type: int, defalut: 546}
+            epochs: {type: float, defalut: 100}
+            batch_size: {type: float, defalut: 100}
+            file: {type: string, defalut: 'airline-passengers.csv'}
+        
+        command: "python model_chirp.py -f={file} -act={act} -lr={lr} -reg={reg} -dropout={dropout} -num_layers={num_layers} -op{optimizer} -dropout=" 
+
