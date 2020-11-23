@@ -1,0 +1,15 @@
+artifact_uri: file:///home/marcin119a/lstm-pycbc/mlruns/0/b7548808c74c40ad80d0cae2a7f33d5d/artifacts
+end_time: 1606137194587
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: b7548808c74c40ad80d0cae2a7f33d5d
+run_uuid: b7548808c74c40ad80d0cae2a7f33d5d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1606137073705
+status: 4
+tags: []
+user_id: marcin119a

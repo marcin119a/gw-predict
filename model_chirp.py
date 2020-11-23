@@ -9,7 +9,7 @@ from datetime import datetime
 import argparse
 import tensorflow as tf
 import hickle as hkl
-
+import mlflow
 
 def model_run(file_name, activation='tanh', lr=9.345405211822168 * (10**-5),
              reg=3.564391979952528 * (10** -5), dropout=0, num_layers=500,
@@ -57,6 +57,7 @@ def model_run(file_name, activation='tanh', lr=9.345405211822168 * (10**-5),
 
     print('RMSE: {}'.format(np.sqrt(np.mean((y_test - y_pred)**2))))
 
+    return model, np.sqrt(np.mean((y_test - y_pred)**2))
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
@@ -82,4 +83,12 @@ if __name__ == "__main__":
         'batch_size':  args['batch_size']
     }
     
-    model_run(**params)
+    with mlflow.start_run():
+
+        model, rmse = model_run(**params)
+
+        mlflow.log_param("file", args['file'])
+        mlflow.log_metric("rmse", rmse)
+
+        mlflow.keras.save_model(model, "model")
+
