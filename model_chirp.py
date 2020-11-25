@@ -13,9 +13,9 @@ import mlflow
 
 def model_run(file_name, activation='tanh', lr=9.345405211822168 * (10**-5),
              reg=3.564391979952528 * (10** -5), dropout=0, num_layers=500,
-             epochs=10, batch_size=2):
+             epochs=10, batch_size=2, bn=False):
     
-    model = create_model(activation=activation, lr=lr, reg=reg, dropout=dropout, num_layers=num_layers)
+    model = create_model(activation=activation, lr=lr, reg=reg, dropout=dropout, num_layers=num_layers, batch_normalizaction=bn)
 
     array_hkl = hkl.load(file_name)
     X_train = array_hkl.get('xtrain')
@@ -50,7 +50,7 @@ def model_run(file_name, activation='tanh', lr=9.345405211822168 * (10**-5),
     ax.legend()
     fig.tight_layout()
 
-    fig.savefig('loss_vs_val_chirp{0}.png'.forma(date))
+    fig.savefig('loss_vs_val_chirp{0}.png'.format(date))
 
     y_test = np.squeeze(y_test)
     y_pred = np.squeeze(y_pred)
@@ -69,6 +69,7 @@ if __name__ == "__main__":
     ap.add_argument("-nn", "--num_layers", type=bool, default=546, help="Num of neurons")
     ap.add_argument("-epochs", "--num_epoch", type=bool, default=100, help="Epochs")
     ap.add_argument("-bs", "--batch_size", type=bool, default=100, help="Batch size")
+    ap.add_argument('-bn', "--batch_normalizaction", type=bool, default=True, help="Batch normalizaction")
     
     args = vars(ap.parse_args())
 
@@ -80,14 +81,16 @@ if __name__ == "__main__":
         'dropout' : args['dropout'], 
         'num_layers' :  args['num_layers'],
         'epochs': args['num_epoch'],
-        'batch_size':  args['batch_size']
+        'batch_size':  args['batch_size'],
+        'bn': args['batch_normalizaction']
     }
     
     with mlflow.start_run():
 
         model, rmse = model_run(**params)
-
-        mlflow.log_param("file", args['file'])
+        for key, value in params.items():
+            mlflow.log_param(key, value)
+        
         mlflow.log_metric("rmse", rmse)
 
         mlflow.keras.save_model(model, "model")

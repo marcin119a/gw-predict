@@ -35,7 +35,7 @@ y_train = np.squeeze(y_train)
 
 
 
-def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_layers=200):
+def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_layers=200, batch_normalizaction= False):
   n_steps_in, n_steps_out = X_train.shape[1], 1
   model = Sequential()
   model.add(
@@ -48,7 +48,7 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_layers=20
           input_shape=(n_steps_in, 1))
       )
 
-  if args["bn"]:
+  if batch_normalizaction:
     model.add(BatchNormalization())
 
   model.add(
@@ -59,7 +59,7 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_layers=20
           kernel_regularizer = l2(reg))
       )
 
-  if args["bn"]:
+  if batch_normalizaction:
     model.add(BatchNormalization())
   model.add(Dense(n_steps_out, kernel_regularizer = l2(reg)))
   model.compile(optimizer='adam', loss='mse')
