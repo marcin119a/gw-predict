@@ -51,6 +51,7 @@ def generate_data(
     measured = clean + noise
     return measured, noise, clean
 
+print(generate_data())
 
 def create_model(input_shape, activation='tanh', lr=1e-3, reg=0.0, dropout=0.0):
     """
