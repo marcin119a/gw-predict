@@ -5,6 +5,7 @@ import numpy as np
 import tensorflow as tf 
 from model_run import model_run
 import argparse
+import mlflow
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-parallel", "--pr", type=bool, default=False, help="Parallel computation")
@@ -29,9 +30,24 @@ space = {
 
 # define loss function
 def loss(params):
-    _, val_loss, _, _ = model_run(**params)
+    model, val_loss, rmse, history = model_run(**params)
     print('Loss: {}'.format(val_loss))
     
+    with mlflow.start_run():
+
+        model, val_loss, rmse, history = model_run(**params)
+        for key, value in params.items():
+            mlflow.log_param(key, value)
+        
+        for step, (mloss, mvloss) in enumerate(zip(history.history['loss'], history.history['val_loss'])):
+            metrics = {'loss': float(mloss), 'val_loss': float(mvloss)}
+            mlflow.log_metrics(metrics, step=step)
+
+        
+        mlflow.log_metric("rmse", rmse)
+
+        mlflow.keras.log_model(model, "lstm-pycbc")
+
     return {'loss': val_loss, 'status': STATUS_OK}
 
 if __name__ == "__main__":
