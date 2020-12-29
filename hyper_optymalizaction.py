@@ -29,8 +29,7 @@ space = {
 
 # define loss function
 def loss(params):
-    _, val_loss, _, _ = model_run(**space)
-
+    _, val_loss, _, _ = model_run(**params)
     print('Loss: {}'.format(val_loss))
     
     return {'loss': val_loss, 'status': STATUS_OK}

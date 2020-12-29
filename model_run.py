@@ -29,11 +29,8 @@ def model_run(file_name, activation='tanh', lr=9.35 * (10**-5),
     y_pred = model.predict(X_test)
     val_loss = model.evaluate(X_test, y_test, verbose=1)
 
-
     y_test = np.squeeze(y_test)
     y_pred = np.squeeze(y_pred)
-
-
 
     print('RMSE: {}'.format(np.sqrt(np.mean((y_test - y_pred)**2))))
     
@@ -68,7 +65,7 @@ if __name__ == "__main__":
     
     with mlflow.start_run():
 
-        model, rmse, history = model_run(**params)
+        model, val_loss, rmse, history = model_run(**params)
         for key, value in params.items():
             mlflow.log_param(key, value)
         
