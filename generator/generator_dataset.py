@@ -3,7 +3,7 @@ from generator_waveform import generate_wave
 import tensorflow as tf
 from utilities import mass_quarter, max_ts
 
-def random_dataset(m1, m2, n_steps, iteraction, quark=False, max_model=False):
+def random_dataset(m1, m2, n_steps, iteraction, chirp=True, max_model=False):
   apx = 'SEOBNRv4'
   
 
@@ -34,7 +34,7 @@ def random_dataset(m1, m2, n_steps, iteraction, quark=False, max_model=False):
       x1 = np.array([step for step in signal_h1])    
       x1_norm = tf.keras.utils.normalize(x1, axis = -1)  
       
-      if quark == True:
+      if chirp == True:
         y1 = mass_quarter(mass1, mass2)
         #without normalizaction
         y_norm.append(y1)

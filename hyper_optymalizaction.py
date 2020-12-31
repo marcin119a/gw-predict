@@ -22,7 +22,7 @@ space = {
     'dropout':hp.uniform('dropout', 0.0, 1.0), 
     'reg':hp.uniform('reg', 1e-6, 1e-3), 
     'num_layers': hp.uniformint('num_layers', 64,1024),
-    'file_name': 'data/D-SET(100,1200)-chirp.hkl',
+    'file_name': 'data/D-SET(n=100,time_steps=1400)chirp=chirp.hkl',
     'epochs': 100,
     'batch_size':  100,
     'bn': True
