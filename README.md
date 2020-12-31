@@ -83,3 +83,4 @@ Datasets are stored into .hkl files. Example paterns of files ```D-SET-norm(100,
 
 References:
 * https://dcc.ligo.org/LIGO-P1800129/public
+* https://arxiv.org/abs/1602.03837
