@@ -3,7 +3,7 @@ from keras.layers import LSTM, Dense
 import keras.optimizers as optim
 from keras.regularizers import l1,l2
 import numpy as np
-from model import create_model, split_dataset
+from model_gru import create_model, split_dataset
 import argparse
 import tensorflow as tf
 import hickle as hkl
@@ -33,7 +33,7 @@ def model_run(file_name, activation='tanh', lr=9.35 * (10**-5),
     y_pred = np.squeeze(y_pred)
 
     print('RMSE: {}'.format(np.sqrt(np.mean((y_test - y_pred)**2))))
-    
+
 
     return model, val_loss, np.sqrt(np.mean((y_test - y_pred)**2)), stats
 

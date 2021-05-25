@@ -18,12 +18,12 @@ def split_dataset(file_name):
 
   
 
-def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_layers=200, batch_normalizaction= False, n_steps_in=1):
+def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.5, num_neurons=200, batch_normalizaction= False, n_steps_in=1):
   n_steps_out = 1
   model = Sequential()
   model.add(
       LSTM(
-          num_layers, 
+          num_neurons, 
           activation=activation, 
           dropout = dropout, 
           kernel_regularizer = l2(reg), 
@@ -36,7 +36,7 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_layers=20
 
   model.add(
       LSTM(
-          num_layers, 
+          num_neurons, 
           activation=activation, 
           dropout = dropout, 
           kernel_regularizer = l2(reg))
@@ -44,6 +44,7 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_layers=20
 
   if batch_normalizaction:
     model.add(BatchNormalization())
+  
   model.add(Dense(n_steps_out, kernel_regularizer = l2(reg)))
   model.compile(optimizer='adam', loss='mse')
   
