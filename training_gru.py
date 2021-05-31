@@ -3,34 +3,42 @@ from keras.layers import LSTM, Dense
 import keras.optimizers as optim
 from keras.regularizers import l1,l2
 import numpy as np
-from model_gru import create_model, split_dataset
+from model_gru import create_model
 import argparse
 import tensorflow as tf
 import hickle as hkl
 import mlflow
+from utilities import split_dataset
 
 
 def model_run(file_name, activation='tanh', lr=9.35 * (10**-5),
-             reg=3.57 * (10** -5), dropout=0, num_layers=500,
-             epochs=100, batch_size=2, bn=False):
+             reg=3.57 * (10** -5), dropout=0, num_neurons=500,
+             epochs=1, batch_size=200, bn=False):
     
     X_test, X_train, y_test, y_train = split_dataset(file_name)
 
     y_train = tf.keras.utils.normalize(y_train)  
     y_test = tf.keras.utils.normalize(y_test)  
+    y_train = tf.transpose(y_train) 
+    y_test = tf.transpose(y_test)
+    #(batch_size, timesteps, units)
+    #(?, 1024, 1) 
 
-    y_test = np.squeeze(y_test)
-    y_train = np.squeeze(y_train)
+    model = create_model(activation=activation, lr=lr, reg=reg, dropout=dropout, num_neurons=num_neurons, batch_normalization=bn, n_steps_in=X_train.shape[1])
+    #zbudowanie modelu wiele-do-wielu 
+    y_train = tf.tile(y_train, [1, X_train.shape[1]])
+    y_test = tf.tile(y_test, [1, X_test.shape[1]])
+    print(y_train.shape, 'y_train.shape')
+    print(y_test.shape, 'y_test.shape')
+    print(X_train.shape, 'X_train.shape')
 
-    model = create_model(activation=activation, lr=lr, reg=reg, dropout=dropout, num_layers=num_layers, batch_normalizaction=bn, n_steps_in=X_train.shape[1])
 
     stats = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=epochs, batch_size=batch_size)
-
     y_pred = model.predict(X_test)
     val_loss = model.evaluate(X_test, y_test, verbose=1)
 
-    y_test = np.squeeze(y_test)
-    y_pred = np.squeeze(y_pred)
+    #y_test = np.squeeze(y_test)
+    #y_pred = np.squeeze(y_pred)
 
     print('RMSE: {}'.format(np.sqrt(np.mean((y_test - y_pred)**2))))
 
@@ -44,10 +52,10 @@ if __name__ == "__main__":
     ap.add_argument("-lr", "--lr", type=bool, default=0, help="Learning Rate")
     ap.add_argument("-reg", "--reg", type=bool, default=0, help="Regularizaction")
     ap.add_argument("-dropout", "--dropout", type=bool, default=0.37, help="Dropout")
-    ap.add_argument("-nn", "--num_layers", type=bool, default=546, help="Num of neurons")
+    ap.add_argument("-nn", "--num_neurons", type=bool, default=546, help="Num of neurons")
     ap.add_argument("-epochs", "--num_epoch", type=bool, default=100, help="Epochs")
     ap.add_argument("-bs", "--batch_size", type=bool, default=100, help="Batch size")
-    ap.add_argument('-bn', "--batch_normalizaction", type=bool, default=True, help="Batch normalizaction")
+    ap.add_argument('-bn', "--batch_normalization", type=bool, default=True, help="Batch normalizaction")
     
     args = vars(ap.parse_args())
 
@@ -57,10 +65,10 @@ if __name__ == "__main__":
         'lr' : args['lr'], 
         'reg' : args['reg'], 
         'dropout' : args['dropout'], 
-        'num_layers' :  args['num_layers'],
+        'num_neurons' :  args['num_neurons'],
         'epochs': args['num_epoch'],
         'batch_size':  args['batch_size'],
-        'bn': args['batch_normalizaction']
+        'bn': args['batch_normalization']
     }
     
     with mlflow.start_run():
@@ -76,5 +84,5 @@ if __name__ == "__main__":
         
         mlflow.log_metric("rmse", rmse)
 
-        mlflow.keras.log_model(model, "lstm-pycbc")
+        mlflow.keras.log_model(model, "gru_pycbc")
 

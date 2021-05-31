@@ -1,37 +1,31 @@
 from keras.models import Sequential
-from keras.layers import LSTM, Dense
+from keras.layers import GRU, Dense
 from keras.regularizers import l1,l2
 from keras.layers.normalization import BatchNormalization
-import hickle as hkl
 
-def split_dataset(file_name):
-  array_hkl = hkl.load(file_name)
-  X_train = array_hkl.get('xtrain')
-  X_test = array_hkl.get('xtest')
-  y_train = array_hkl.get('ytrain')
-  y_test = array_hkl.get('ytest')
 
-  X_train = X_train.reshape(X_train.shape[0], X_train.shape[2], 1)
-  X_test =  X_test.reshape(X_test.shape[0], X_test.shape[2], 1)
-
-  return X_test, X_train, y_test, y_train
-
-  
-
-def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_neurons=200, batch_normalizaction= False, n_steps_in=1):
+"""
+https://stackoverflow.com/questions/48491737/understanding-keras-lstms-role-of-batch-size-and-statefulness
+"""
+def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_neurons=200, batch_normalization=False, n_steps_in=1):
   n_steps_out = 1
   model = Sequential()
+  #(batch_size, timesteps, units)
+  #(?, 1024, 1) 
+  #n_steps_in = 3
   model.add(
       GRU(
-          num_neurons, 
-          activation=activation, 
+          units=num_neurons, 
+          activation= activation,
+          recurrent_activation='sigmoid',
           dropout = dropout, 
           kernel_regularizer = l2(reg), 
           return_sequences=True, 
-          input_shape=(n_steps_in, 1))
+          #input_shape=(1200, 1)
+          )
       )
 
-  if batch_normalizaction:
+  if batch_normalization:
     model.add(BatchNormalization())
 
   model.add(
@@ -39,12 +33,16 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_neurons=2
           num_neurons, 
           activation=activation, 
           dropout = dropout, 
-          kernel_regularizer = l2(reg))
+          kernel_regularizer = l2(reg),
+          #return_sequences = True,
+          )
       )
-
-  if batch_normalizaction:
+  #?, 1200, 546
+  if batch_normalization:
     model.add(BatchNormalization())
-  model.add(Dense(n_steps_out, kernel_regularizer = l2(reg)))
+  n_steps_out = 1200
+  
+  model.add(Dense(units=n_steps_out, kernel_regularizer = l2(reg)))
   model.compile(optimizer='adam', loss='mse')
   
   return model
