@@ -19,19 +19,19 @@ def model_run(file_name, activation='tanh', lr=9.35 * (10**-5),
 
     y_train = tf.keras.utils.normalize(y_train)  
     y_test = tf.keras.utils.normalize(y_test)  
+    y_train = tf.transpose(y_train) 
+    y_test = tf.transpose(y_test)
 
-    y_test = np.squeeze(y_test)
-    y_train = np.squeeze(y_train)
 
     model = create_model(activation=activation, lr=lr, reg=reg, dropout=dropout, num_neurons=num_neurons, batch_normalizaction=bn, n_steps_in=X_train.shape[1])
+    
+    y_train = tf.tile(y_train, [1, X_train.shape[1]])
+    y_test = tf.tile(y_test, [1, X_test.shape[1]])
 
     stats = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=epochs, batch_size=batch_size)
-
     y_pred = model.predict(X_test)
     val_loss = model.evaluate(X_test, y_test, verbose=1)
 
-    y_test = np.squeeze(y_test)
-    y_pred = np.squeeze(y_pred)
 
     print('RMSE: {}'.format(np.sqrt(np.mean((y_test - y_pred)**2))))
     
@@ -64,18 +64,18 @@ if __name__ == "__main__":
         'bn': args['batch_normalizaction']
     }
     
-    with mlflow.start_run():
+    #with mlflow.start_run():
 
-        model, val_loss, rmse, history = model_run(**params)
-        for key, value in params.items():
-            mlflow.log_param(key, value)
-        
-        for step, (mloss, mvloss) in enumerate(zip(history.history['loss'], history.history['val_loss'])):
-            metrics = {'loss': float(mloss), 'val_loss': float(mvloss)}
-            mlflow.log_metrics(metrics, step=step)
+    model, val_loss, rmse, history = model_run(**params)
+    for key, value in params.items():
+        mlflow.log_param(key, value)
+    
+    for step, (mloss, mvloss) in enumerate(zip(history.history['loss'], history.history['val_loss'])):
+        metrics = {'loss': float(mloss), 'val_loss': float(mvloss)}
+        mlflow.log_metrics(metrics, step=step)
 
-        
-        mlflow.log_metric("rmse", rmse)
+    
+    mlflow.log_metric("rmse", rmse)
 
-        mlflow.keras.log_model(model, "lstm_pycbc")
+        #mlflow.keras.log_model(model, "lstm_pycbc")
 

@@ -4,11 +4,11 @@ from keras.regularizers import l1,l2
 from keras.layers.normalization import BatchNormalization
 
 def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.5, num_neurons=200, batch_normalizaction=False, n_steps_in=1):
-  n_steps_out = 1
+  n_steps_out = 1200
   model = Sequential()
   model.add(
       LSTM(
-          num_neurons, 
+          units=num_neurons, 
           activation=activation, 
           dropout = dropout, 
           kernel_regularizer = l2(reg), 
@@ -21,16 +21,15 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.5, num_neurons=2
 
   model.add(
       LSTM(
-          num_neurons, 
+          units=num_neurons, 
           activation=activation, 
           dropout = dropout, 
           kernel_regularizer = l2(reg))
       )
 
-  if batch_normalizaction:
-    model.add(BatchNormalization())
+  model.add(BatchNormalization())
   
-  model.add(Dense(n_steps_out, kernel_regularizer = l2(reg)))
+  model.add(Dense(units=n_steps_out, kernel_regularizer = l2(reg)))
   model.compile(optimizer='adam', loss='mse')
   
   return model

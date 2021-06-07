@@ -3,17 +3,14 @@ from keras.layers import LSTM, Dense
 import keras.optimizers as optim
 from keras.regularizers import l1,l2
 import numpy as np
-from model_gru import create_model
+from model_cnn import create_model
 import argparse
 import tensorflow as tf
 import hickle as hkl
 import mlflow
 from utilities import split_dataset
 
-'''
-(batch_size, timesteps, units)
-(?, 1024, 1) 
-'''
+
 def model_run(file_name, activation='tanh', lr=9.35 * (10**-5),
              reg=3.57 * (10** -5), dropout=0, num_neurons=500,
              epochs=1, batch_size=200, bn=False):
@@ -24,11 +21,17 @@ def model_run(file_name, activation='tanh', lr=9.35 * (10**-5),
     y_test = tf.keras.utils.normalize(y_test)  
     y_train = tf.transpose(y_train) 
     y_test = tf.transpose(y_test)
+    #(batch_size, timesteps, units)
+    #(?, 1024, 1) 
 
     model = create_model(activation=activation, lr=lr, reg=reg, dropout=dropout, num_neurons=num_neurons, batch_normalization=bn, n_steps_in=X_train.shape[1])
-
+    #zbudowanie modelu wiele-do-wielu 
     y_train = tf.tile(y_train, [1, X_train.shape[1]])
     y_test = tf.tile(y_test, [1, X_test.shape[1]])
+    print(y_train.shape, 'y_train.shape')
+    print(y_test.shape, 'y_test.shape')
+    print(X_train.shape, 'X_train.shape')
+
 
     stats = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=epochs, batch_size=batch_size)
     y_pred = model.predict(X_test)
@@ -78,5 +81,5 @@ if __name__ == "__main__":
     
     mlflow.log_metric("rmse", rmse)
 
-        #mlflow.keras.log_model(model, "gru_pycbc")
+        #mlflow.keras.log_model(model, "cnn_pycbc")
 
