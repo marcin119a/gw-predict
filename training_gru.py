@@ -1,31 +1,28 @@
-from keras.models import Sequential
-from keras.layers import LSTM, Dense
+from generator import random_dataset, split_dataset
 import keras.optimizers as optim
-from keras.regularizers import l1,l2
 import numpy as np
 from model_gru import create_model
 import argparse
 import tensorflow as tf
-import hickle as hkl
 import mlflow
-from utilities import split_dataset
 
+import os 
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 '''
 (batch_size, timesteps, units)
 (?, 1024, 1) 
 '''
-def model_run(file_name, activation='tanh', lr=9.35 * (10**-5),
+def model_run(file_name, activation='relu', lr=9.35 * (10**-5),
              reg=3.57 * (10** -5), dropout=0, num_neurons=500,
-             epochs=1, batch_size=200, bn=False):
+             epochs=1, batch_size=200,
+             m1=30, m2=60, ts_lenght=600
+            ):
     
-    X_test, X_train, y_test, y_train = split_dataset(file_name)
+    X, y = random_dataset(m1=m1, m2=m2, n_steps=ts_lenght, batch_size=batch_size, channels=3)
 
-    y_train = tf.keras.utils.normalize(y_train)  
-    y_test = tf.keras.utils.normalize(y_test)  
-    y_train = tf.transpose(y_train) 
-    y_test = tf.transpose(y_test)
+    X_test, X_train, y_test, y_train = split_dataset(X, y)
 
-    model = create_model(activation=activation, lr=lr, reg=reg, dropout=dropout, num_neurons=num_neurons, batch_normalization=bn, n_steps_in=X_train.shape[1])
+    model = create_model(activation=activation, lr=lr, reg=reg, dropout=dropout, num_neurons=num_neurons, n_steps_in=X_train.shape[1], n_steps_out=y_train.shape[1])
 
     y_train = tf.tile(y_train, [1, X_train.shape[1]])
     y_test = tf.tile(y_test, [1, X_test.shape[1]])
@@ -43,14 +40,16 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("-f", "--file", type=str, default='data/D-SET(100,1200)-chirp.hkl', help="File")
     ap.add_argument("-act", "--activation", type=str, default='tanh', help="Activation")
-    ap.add_argument("-lr", "--lr", type=bool, default=0, help="Learning Rate")
-    ap.add_argument("-reg", "--reg", type=bool, default=0, help="Regularizaction")
-    ap.add_argument("-dropout", "--dropout", type=bool, default=0.37, help="Dropout")
-    ap.add_argument("-nn", "--num_neurons", type=bool, default=546, help="Num of neurons")
-    ap.add_argument("-epochs", "--num_epoch", type=bool, default=100, help="Epochs")
-    ap.add_argument("-bs", "--batch_size", type=bool, default=100, help="Batch size")
-    ap.add_argument('-bn', "--batch_normalization", type=bool, default=True, help="Batch normalizaction")
-    
+    ap.add_argument("-lr", "--lr", type=int, default=0.0001, help="Learning Rate")
+    ap.add_argument("-reg", "--reg", type=int, default=0, help="Regularizaction")
+    ap.add_argument("-dropout", "--dropout", type=int, default=0.37, help="Dropout")
+    ap.add_argument("-nn", "--num_neurons", type=int, default=546, help="Num of neurons")
+    ap.add_argument("-ts", "--ts_lenght", type=bool, default=600, help="Time series lenght")
+    ap.add_argument("-epochs", "--num_epoch", type=int, default=100, help="Epochs")
+    ap.add_argument("-bs", "--batch_size", type=int, default=100, help="Batch size")
+    ap.add_argument("-m1", "--mass1", type=int, default=30, help="Mass of first black hole")
+    ap.add_argument("-m2", "--mass2", type=int, default=60, help="Mass of first black hole")
+
     args = vars(ap.parse_args())
 
     params = {
@@ -62,21 +61,23 @@ if __name__ == "__main__":
         'num_neurons' :  args['num_neurons'],
         'epochs': args['num_epoch'],
         'batch_size':  args['batch_size'],
-        'bn': args['batch_normalization']
+        'ts_lenght': args['ts_lenght'],
+        'm1':  args['mass1'],
+        'm2':  args['mass2'],
     }
     
-    #with mlflow.start_run():
+    with mlflow.start_run():
 
-    model, val_loss, rmse, history = model_run(**params)
-    for key, value in params.items():
-        mlflow.log_param(key, value)
-    
-    for step, (mloss, mvloss) in enumerate(zip(history.history['loss'], history.history['val_loss'])):
-        metrics = {'loss': float(mloss), 'val_loss': float(mvloss)}
-        mlflow.log_metrics(metrics, step=step)
+        model, val_loss, rmse, history = model_run(**params)
+        for key, value in params.items():
+            mlflow.log_param(key, value)
+        
+        for step, (mloss, mvloss) in enumerate(zip(history.history['loss'], history.history['val_loss'])):
+            metrics = {'loss': float(mloss), 'val_loss': float(mvloss)}
+            mlflow.log_metrics(metrics, step=step)
 
-    
-    mlflow.log_metric("rmse", rmse)
+        
+        mlflow.log_metric("rmse", rmse)
 
-        #mlflow.keras.log_model(model, "gru_pycbc")
+        mlflow.keras.log_model(model, "gru_pycbc")
 
