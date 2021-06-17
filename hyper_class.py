@@ -12,8 +12,9 @@ def objective(trial):
     batch_size = trial.suggest_int("batch_size", 100, 200)
     epochs = trial.suggest_int("epochs", 100, 200)
 
-    model, val_loss, stats = model_run(filters1=filters1, filters2=filters2, filters3=filters3, filters4=filters4, 
-                       dropout1=dropout1, dropout2=dropout2, epochs=epochs, batch_size=batch_size)
+    model, val_loss, stats = model_run(
+                        filters1=filters1, filters2=filters2, filters3=filters3, filters4=filters4, 
+                        dropout1=dropout1, dropout2=dropout2, epochs=epochs, batch_size=batch_size)
 
     return 1 - np.mean(stats.history['accuracy']) #maksymalizacja 
 

@@ -1,4 +1,3 @@
-from generator import split_dataset, random_dataset
 import keras.optimizers as optim
 import numpy as np
 from model_lstm import create_model
@@ -7,18 +6,15 @@ import tensorflow as tf
 import mlflow
 from utilities import split_dataset as split_data
 
-
+#CPU training
 #import os 
 #os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
-def model_run(file_name, activation='tanh', lr=0.001,
-             reg=0.002, dropout=0, num_units=500,
-             epochs=100, batch_size=200,
-             m1=30, m2=60, ts_lenght=800
+def model_run(file_name, lr,
+             reg, dropout, activation, num_units,
+             epochs, batch_size, m1, m2, ts_lenght
              ):
 
-    #X, y = random_dataset(m1=m1, m2=m2, n_steps=ts_lenght, batch_size=batch_size, channels=3)
-    #X_test, X_train, y_test, y_train = split_dataset(X, y)
     X_test, X_train, y_test, y_train = split_data(file_name)
 
 
@@ -44,13 +40,13 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("-f", "--file", type=str, default='D-SET(n=1000,time_steps=800).hkl', help="File")
     ap.add_argument("-act", "--activation", type=str, default='tanh', help="Activation")
-    ap.add_argument("-lr", "--lr", type=int, default=0.0001, help="Learning Rate")
-    ap.add_argument("-reg", "--reg", type=int, default=0, help="Regularizaction")
+    ap.add_argument("-lr", "--lr", type=float, default=0.0001, help="Learning Rate")
+    ap.add_argument("-reg", "--reg", type=float, default=0, help="Regularizaction")
     ap.add_argument("-dropout", "--dropout", type=int, default=0.37, help="Dropout")
     ap.add_argument("-nu", "--num_units", type=int, default=300, help="Num of units for first layer RNN")
-    ap.add_argument("-ts", "--ts_lenght", type=bool, default=800, help="Time series lenght")
     ap.add_argument("-epochs", "--num_epoch", type=int, default=100, help="Epochs")
     ap.add_argument("-bs", "--batch_size", type=int, default=200, help="Batch size")
+    ap.add_argument("-ts", "--ts_lenght", type=int, default=800, help="Time series lenght")
     ap.add_argument("-m1", "--mass1", type=int, default=30, help="Mass of first black hole")
     ap.add_argument("-m2", "--mass2", type=int, default=60, help="Mass of first black hole")
 
@@ -65,6 +61,7 @@ if __name__ == "__main__":
         'dropout' : args['dropout'], 
         'num_units' :  args['num_units'],
         'epochs': args['num_epoch'],
+        'batch_size':  args['batch_size'],
         'ts_lenght': args['ts_lenght'],
         'm1':  args['mass1'],
         'm2':  args['mass2'],
