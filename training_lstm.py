@@ -38,10 +38,7 @@ def model_run(file_name, activation='tanh', lr=0.001,
     val_loss = model.evaluate(X_test, y_test, verbose=1)
 
 
-    print('RMSE: {}'.format(np.sqrt(np.mean((y_test - y_pred)**2))))
-    
-
-    return model, val_loss, np.sqrt(np.mean((y_test - y_pred)**2)), stats
+    return model, val_loss, stats
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
@@ -53,7 +50,7 @@ if __name__ == "__main__":
     ap.add_argument("-nu", "--num_units", type=int, default=300, help="Num of units for first layer RNN")
     ap.add_argument("-ts", "--ts_lenght", type=bool, default=800, help="Time series lenght")
     ap.add_argument("-epochs", "--num_epoch", type=int, default=100, help="Epochs")
-    ap.add_argument("-bs", "--batch_size", type=int, default=100, help="Batch size")
+    ap.add_argument("-bs", "--batch_size", type=int, default=200, help="Batch size")
     ap.add_argument("-m1", "--mass1", type=int, default=30, help="Mass of first black hole")
     ap.add_argument("-m2", "--mass2", type=int, default=60, help="Mass of first black hole")
 

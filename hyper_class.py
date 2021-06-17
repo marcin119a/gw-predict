@@ -19,5 +19,5 @@ def objective(trial):
 
 
 trials = 100
-study = optuna.create_study(storage="sqlite:///hyper_class.db", study_name="my_study")
+study = optuna.create_study(storage="sqlite:///hyper_class.db", study_name="class_study")
 study.optimize(objective, n_trials=trials)
