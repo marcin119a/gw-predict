@@ -7,7 +7,7 @@ from keras.layers.normalization import BatchNormalization
 """
 https://stackoverflow.com/questions/48491737/understanding-keras-lstms-role-of-batch-size-and-statefulness
 """
-def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_neurons=200, n_steps_in=1, n_steps_out=600):
+def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_units=300, n_steps_in=1, n_steps_out=600):
 
   model = Sequential()
   #(batch_size, timesteps, units)
@@ -15,7 +15,7 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_neurons=2
   #n_steps_in = 3
   model.add(
       GRU(
-          units = num_neurons, 
+          units = num_units, 
           activation = activation,
           recurrent_activation = activation,
           dropout = dropout, 
@@ -27,7 +27,7 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_neurons=2
 
   model.add(
       GRU(
-          units=num_neurons, 
+          units=num_units, 
           activation=activation, 
           dropout = dropout, 
           kernel_regularizer = l2(reg),
