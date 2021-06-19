@@ -38,7 +38,7 @@ def model_run(file_name, lr,
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("-f", "--file", type=str, default='D-SET(n=1000,ts_lenght=800,m1=30,m2=60).hkl', help="File")
+    ap.add_argument("-f", "--file", type=str, default='D-SET(n=1000,ts_lenght=800,m1=50,m1=80).hkl', help="File")
     ap.add_argument("-act", "--activation", type=str, default='tanh', help="Activation")
     ap.add_argument("-lr", "--lr", type=float, default=0.0001, help="Learning Rate")
     ap.add_argument("-reg", "--reg", type=float, default=0, help="Regularizaction")
@@ -47,8 +47,8 @@ if __name__ == "__main__":
     ap.add_argument("-epochs", "--num_epoch", type=int, default=100, help="Epochs")
     ap.add_argument("-bs", "--batch_size", type=int, default=200, help="Batch size")
     ap.add_argument("-ts", "--ts_lenght", type=int, default=800, help="Time series lenght")
-    ap.add_argument("-m1", "--mass1", type=int, default=30, help="Mass of first black hole")
-    ap.add_argument("-m2", "--mass2", type=int, default=60, help="Mass of first black hole")
+    ap.add_argument("-m1", "--mass1", type=int, default=50, help="Mass of first black hole")
+    ap.add_argument("-m2", "--mass2", type=int, default=80, help="Mass of first black hole")
 
     
     args = vars(ap.parse_args())

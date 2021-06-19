@@ -8,8 +8,8 @@ import hickle as hkl
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("-n", "--n", type=int, default=1000, help="the number of signals")
-    ap.add_argument("-m1", "--mass1", type=int, default=40, help="First mass of black hole")
-    ap.add_argument("-m2", "--mass2", type=int, default=70, help="Second mass of black hole")
+    ap.add_argument("-m1", "--mass1", type=int, default=50, help="First mass of black hole")
+    ap.add_argument("-m2", "--mass2", type=int, default=80, help="Second mass of black hole")
     ap.add_argument("-time_steps", "--ts", type=int, default=800, help="Time steps for single signal")
 
     args = vars(ap.parse_args())
