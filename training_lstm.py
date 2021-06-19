@@ -38,11 +38,11 @@ def model_run(file_name, lr,
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("-f", "--file", type=str, default='D-SET(n=1000,time_steps=800).hkl', help="File")
+    ap.add_argument("-f", "--file", type=str, default='D-SET(n=1000,ts_lenght=800,m1=30,m2=60).hkl', help="File")
     ap.add_argument("-act", "--activation", type=str, default='tanh', help="Activation")
     ap.add_argument("-lr", "--lr", type=float, default=0.0001, help="Learning Rate")
     ap.add_argument("-reg", "--reg", type=float, default=0, help="Regularizaction")
-    ap.add_argument("-dropout", "--dropout", type=int, default=0.37, help="Dropout")
+    ap.add_argument("-dropout", "--dropout", type=float, default=0.5, help="Dropout")
     ap.add_argument("-nu", "--num_units", type=int, default=300, help="Num of units for first layer RNN")
     ap.add_argument("-epochs", "--num_epoch", type=int, default=100, help="Epochs")
     ap.add_argument("-bs", "--batch_size", type=int, default=200, help="Batch size")
@@ -73,8 +73,11 @@ if __name__ == "__main__":
         for key, value in params.items():
             mlflow.log_param(key, value)
         
-        for step, (mloss, mvloss) in enumerate(zip(history.history['loss'], history.history['val_loss'])):
-            metrics = {'loss': float(mloss), 'val_loss': float(mvloss)}
+        for step, (mloss, mvloss, mmae, mvmea) in enumerate(zip(history.history['loss'], 
+                                                                history.history['val_loss'], 
+                                                                history.history['mae'], 
+                                                                history.history['val_mae'])):
+            metrics = {'loss': float(mloss), 'val_loss': float(mvloss), 'mae': float(mmae), 'mvmea': float(mvmea)}
             mlflow.log_metrics(metrics, step=step)
 
 

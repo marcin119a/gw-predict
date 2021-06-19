@@ -32,12 +32,11 @@ def model_run(file_name, activation, lr, reg, dropout,
     y_pred = model.predict(X_test)
     val_loss = model.evaluate(X_test, y_test, verbose=1)
 
-
     return model, val_loss, stats
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("-f", "--file", type=str, default='D-SET(n=1000,time_steps=800).hkl', help="File")
+    ap.add_argument("-f", "--file", type=str, default='D-SET(n=1000,ts_lenght=800,m1=30,m2=60).hkl', help="File")
     ap.add_argument("-act", "--activation", type=str, default='tanh', help="Activation")
     ap.add_argument("-lr", "--lr", type=float, default=0.0001, help="Learning Rate")
     ap.add_argument("-reg", "--reg", type=float, default=0.0, help="Regularizaction")

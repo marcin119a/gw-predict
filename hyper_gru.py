@@ -3,18 +3,16 @@ import optuna
 import numpy as np
 
 def objective(trial):
-    num_units = trial.suggest_int("num_units", 300, 500)
-    batch_size = trial.suggest_int("batch_size", 100, 200)
 
     params = {
-        'file_name': 'D-SET(n=1000,time_steps=800).hkl',
+        'file_name': 'D-SET(n=1000,ts_lenght=800,m1=30,m2=60).hkl',
         'activation': 'tanh',
         'lr' : 0.0001, 
         'reg' : trial.suggest_float("reg", 0.25, 0.5), 
         'dropout' : trial.suggest_float("dp1", 0, 1), 
         'num_units' :  trial.suggest_int("num_units", 300, 500),
         'epochs': trial.suggest_int("epochs", 100, 200),
-        'batch_size':  batch_size,
+        'batch_size':  trial.suggest_int("batch_size", 100, 200),
         'ts_lenght': 800,
         'm1':  30,
         'm2':  60,
@@ -22,7 +20,7 @@ def objective(trial):
 
     model, val_loss, stats = model_run(**params)
 
-    return 1 - np.mean(stats.history['loss']) #maksymalizacja 
+    return 1 - np.mean(stats.history['mea']) #maksymalizacja błędu średnio bezwzględnego 
 
 
 trials = 100

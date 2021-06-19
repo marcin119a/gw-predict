@@ -59,9 +59,9 @@ def show_confusion_matrix(validations, predictions):
 #import os 
 #os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
-def model_run(activation='tanh', lr=0.001, dropout1=0.5, dropout2=0.25, 
-             filters1=64, filters2=32, filters3=16, filters4=8,
-             epochs=100, batch_size=100, ts_lenght=800,
+def model_run(activation, lr, dropout1, dropout2, 
+             filters1, filters2, filters3, filters4,
+             epochs, batch_size, ts_lenght,
              ):
     #X, y = random_dataset(m1=m1, m2=m2, n_steps=ts_lenght, batch_size=batch_size, channels=3)
     #X_test, X_train, y_test, y_train = split_dataset(X, y)
@@ -98,25 +98,34 @@ def model_run(activation='tanh', lr=0.001, dropout1=0.5, dropout2=0.25,
     max_y_pred_test = np.argmax(y_pred_test, axis=1)
     max_y_test = np.argmax(y_test, axis=1)
 
-    #show_confusion_matrix(max_y_test, max_y_pred_test)
+    show_confusion_matrix(max_y_test, max_y_pred_test)
 
 
     return model, val_loss, stats
 
 if __name__ == "__main__":
+    #537|69|epochs|166.0|{"name": "IntUniformDistribution", "attributes": {"low": 100, "high": 200, "step": 1}}
+    #538|69|batch_size|162.0|{"name": "IntUniformDistribution", "attributes": {"low": 100, "high": 200, "step": 1}}
+    #539|69|dp1|0.0621030062107027|{"name": "UniformDistribution", "attributes": {"low": 0, "high": 1}}
+    #540|69|dp2|0.00751619866552281|{"name": "UniformDistribution", "attributes": {"low": 0, "high": 1}}
+    #541|69|filters1|97.0|{"name": "IntUniformDistribution", "attributes": {"low": 64, "high": 128, "step": 1}}
+    #542|69|filters2|39.0|{"name": "IntUniformDistribution", "attributes": {"low": 32, "high": 64, "step": 1}}
+    #543|69|filters3|20.0|{"name": "IntUniformDistribution", "attributes": {"low": 16, "high": 32, "step": 1}}
+    #544|69|filters4|11.0|{"name": "IntUniformDistribution", "attributes": {"low": 8, "high": 16, "step": 1}}
+
     ap = argparse.ArgumentParser()
     ap.add_argument("-act", "--activation", type=str, default='tanh', help="Activation")
     ap.add_argument("-lr", "--lr", type=float, default=0.0001, help="Learning Rate")
     ap.add_argument("-reg", "--reg", type=int, default=0, help="Regularizaction")
-    ap.add_argument("-dropout1", "--dropout1", type=float, default=0.5, help="Dropout 1")
-    ap.add_argument("-dropout2", "--dropout2", type=float, default=0.25, help="Dropout 2")
-    ap.add_argument("-filters1", "--filters1", type=int, default=64, help="Filters")
-    ap.add_argument("-filters2", "--filters2", type=int, default=32, help="Filters")
-    ap.add_argument("-filters3", "--filters3", type=int, default=16, help="Filters")
-    ap.add_argument("-filters4", "--filters4", type=int, default=8, help="Filters")
+    ap.add_argument("-dropout1", "--dropout1", type=float, default=0.0621, help="Dropout 1")
+    ap.add_argument("-dropout2", "--dropout2", type=float, default=0.007, help="Dropout 2")
+    ap.add_argument("-filters1", "--filters1", type=int, default=97, help="Filters")
+    ap.add_argument("-filters2", "--filters2", type=int, default=39, help="Filters")
+    ap.add_argument("-filters3", "--filters3", type=int, default=20, help="Filters")
+    ap.add_argument("-filters4", "--filters4", type=int, default=11, help="Filters")
     ap.add_argument("-ts", "--ts_lenght", type=bool, default=2048, help="Time series lenght")
-    ap.add_argument("-epochs", "--num_epoch", type=int, default=100, help="Epochs")
-    ap.add_argument("-bs", "--batch_size", type=int, default=100, help="Batch size")
+    ap.add_argument("-epochs", "--num_epoch", type=int, default=166, help="Epochs")
+    ap.add_argument("-bs", "--batch_size", type=int, default=162, help="Batch size")
 
     
     args = vars(ap.parse_args())
@@ -132,6 +141,7 @@ if __name__ == "__main__":
         'filters2': args['filters2'],
         'filters3': args['filters3'],
         'filters4': args['filters4'],
+        'batch_size': args['batch_size'],
     }
     
     with mlflow.start_run():

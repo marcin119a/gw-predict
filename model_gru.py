@@ -37,6 +37,6 @@ def create_model(activation='tanh', lr=1e-3, reg=0.0, dropout=0.0, num_units=300
   #?, 1200, 546
   
   model.add(Dense(units=n_steps_out, kernel_regularizer = l2(reg)))
-  model.compile(optimizer='adam', loss='mse')
+  model.compile(optimizer='adam', loss='mse', metrics='mae')
   
   return model

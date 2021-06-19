@@ -27,7 +27,7 @@ def main():
 
     data = {'xtrain': X_train, 'xtest' : X_test, 'ytrain': y_train, 'ytest': y_test}
 
-    hkl.dump(data, 'D-SET(n={0},time_steps={1},mass1={2},mass2={3}).hkl'.format(n, time_steps, m1, m2))
+    hkl.dump(data, 'D-SET(n={0},ts_lenght={1},m1={2},m1={3}).hkl'.format(n, time_steps, m1, m2))
 
 
 if __name__ == '__main__':
