@@ -12,49 +12,6 @@ from sklearn import metrics
 from matplotlib import pyplot as plt
 import seaborn as sns
 
-LABELS = ["noise", "signal", "glitches"]
-def show_confusion_matrix(validations, predictions):
-
-    matrix = metrics.confusion_matrix(validations, predictions)
-    
-    print('matrix',matrix)
-    
-#    print("hand-made precision calculation w.r.t. class 1 -> signal")
-#    tp = 
-    
-    plt.figure(figsize=(6, 4))
-    sns.heatmap(matrix,
-                cmap="Greens",
-                linecolor='white',
-                linewidths=1,
-                xticklabels=LABELS,
-                yticklabels=LABELS,
-                annot=True,
-                fmt="d")
-    plt.title("Confusion Matrix")
-    plt.ylabel("True Label")
-    plt.xlabel("Predicted Label")
-    plt.savefig("confusion_matrix.png")
-
-    
-    matrix1 = matrix.astype('float') / matrix.sum(axis=1)[:, np.newaxis]
-    matrix1 = matrix1*100
-    print('matrix1',matrix1)
-    plt.figure(figsize=(6, 4))
-    ax = sns.heatmap(matrix1,
-                cmap="Greens",
-                linecolor='white',
-                linewidths=1,
-                xticklabels=LABELS,
-                yticklabels=LABELS,
-                annot=True,
-                fmt = '.1f')
-    for t in ax.texts: t.set_text(t.get_text() + " %")
-    plt.title("Normalized Confusion Matrix")
-    plt.ylabel("True Label")
-    plt.xlabel("Predicted Label")
-    plt.savefig("normalized_confusion_matrix.png")
-
 
 #import os 
 #os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
@@ -104,15 +61,6 @@ def model_run(activation, lr, dropout1, dropout2,
     return model, val_loss, stats
 
 if __name__ == "__main__":
-    #537|69|epochs|166.0|{"name": "IntUniformDistribution", "attributes": {"low": 100, "high": 200, "step": 1}}
-    #538|69|batch_size|162.0|{"name": "IntUniformDistribution", "attributes": {"low": 100, "high": 200, "step": 1}}
-    #539|69|dp1|0.0621030062107027|{"name": "UniformDistribution", "attributes": {"low": 0, "high": 1}}
-    #540|69|dp2|0.00751619866552281|{"name": "UniformDistribution", "attributes": {"low": 0, "high": 1}}
-    #541|69|filters1|97.0|{"name": "IntUniformDistribution", "attributes": {"low": 64, "high": 128, "step": 1}}
-    #542|69|filters2|39.0|{"name": "IntUniformDistribution", "attributes": {"low": 32, "high": 64, "step": 1}}
-    #543|69|filters3|20.0|{"name": "IntUniformDistribution", "attributes": {"low": 16, "high": 32, "step": 1}}
-    #544|69|filters4|11.0|{"name": "IntUniformDistribution", "attributes": {"low": 8, "high": 16, "step": 1}}
-
     ap = argparse.ArgumentParser()
     ap.add_argument("-act", "--activation", type=str, default='tanh', help="Activation")
     ap.add_argument("-lr", "--lr", type=float, default=0.0001, help="Learning Rate")

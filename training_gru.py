@@ -5,9 +5,9 @@ import argparse
 import tensorflow as tf
 import mlflow
 from utilities import split_dataset
-import os 
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+#import os 
+#os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 '''
 (batch_size, timesteps, units)
 (?, 1024, 1) 
@@ -31,7 +31,7 @@ def model_run(file_name, activation, lr, reg, dropout,
     stats = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=epochs, batch_size=batch_size)
     y_pred = model.predict(X_test)
     val_loss = model.evaluate(X_test, y_test, verbose=1)
-    print(model.summary())
+
     return model, val_loss, stats
 
 if __name__ == "__main__":
@@ -67,6 +67,7 @@ if __name__ == "__main__":
     with mlflow.start_run():
 
         model, val_loss, history = model_run(**params)
+        model.save('models/gru/')
         for key, value in params.items():
             mlflow.log_param(key, value)
         

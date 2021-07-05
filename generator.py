@@ -37,6 +37,10 @@ def random_dataset(m1, m2, n_steps, batch_size, channels):
       signal_v1_np = np.array([step for step in signal_v1])    
 
       # from ex. 10^{-20} amplitude into (0,1)
+      scale = 10**(20)
+      #X[i,:,0] = signal_h1_np * scale
+      #X[i,:,1] = signal_l1_np * scale
+      #X[i,:,2] = signal_v1_np * scale
       X[i,:,0] = tf.keras.utils.normalize(signal_h1_np, axis = -1)  
       X[i,:,1] = tf.keras.utils.normalize(signal_l1_np, axis = -1)  
       X[i,:,2] = tf.keras.utils.normalize(signal_v1_np, axis = -1)  
@@ -44,9 +48,9 @@ def random_dataset(m1, m2, n_steps, batch_size, channels):
       
       #without normalizaction
       y[i,0] = chrip_mass(mass1, mass2)
-
+     
         
-  return X, tf.keras.utils.normalize(y, axis=0)
+  return X, y
 
 
 def split_dataset(X, y):
