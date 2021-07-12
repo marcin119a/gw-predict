@@ -27,8 +27,8 @@ def model_run(activation, lr, dropout1, dropout2,
 
     model = create_model(
                     activation=activation, lr=lr, dropout1=dropout1, 
-                    dropout2=dropout2, filters1=filters1, filters2=filters2, 
-                    filters3=filters3, filters4=filters4, time_steps=ts_lenght)
+                    filters1=filters1, filters2=filters2, filters3=filters3,
+                    filters4=filters4, time_steps=ts_lenght)
     
     
     # many-to-many rnn model
